@@ -50,6 +50,7 @@ export default {
   'form.basic-form.form.optional': '（选填）',
   'form.basic-form.form.submit': '提交',
   'form.basic-form.form.save': '保存',
+  'form.basic-form.form.cancel': '取消',
   'form.basic-form.email.placeholder': '邮箱',
   'form.basic-form.password.placeholder': '至少6位密码，区分大小写',
   'form.basic-form.confirm-password.placeholder': '确认密码',

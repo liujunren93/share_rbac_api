@@ -5,6 +5,7 @@ const api = {
 }
 
 export function pathList (page, parameter) {
+  console.log(111, page)
   if (page) {
     return http.getPage(api.path, page, parameter)
   } else {

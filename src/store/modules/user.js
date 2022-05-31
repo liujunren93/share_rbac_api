@@ -1,5 +1,5 @@
 import storage from 'store'
-import { login, getInfo } from '@/api/login'
+import { login, getInfo, userPermission } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
@@ -10,7 +10,8 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
-    info: {}
+    info: {},
+    permission: {}
   },
 
   mutations: {
@@ -27,6 +28,9 @@ const user = {
     SET_ROLES: (state, roles) => {
       state.roles = roles
     },
+    SET_PERMISSION: (state, permission) => {
+      state.permission = permission
+    },
     SET_INFO: (state, info) => {
       state.info = info
     }
@@ -42,6 +46,9 @@ const user = {
           commit('SetHaseMenu', false, { root: true })
           const token = response.data.token
           const userInfo = response.data.user_info
+          userPermission({ role_ids: userInfo.role_ids }).then(res => {
+            commit('SET_PERMISSION', res.data)
+          })
           commit('SET_ROLES', userInfo.role_ids)
           commit('SET_INFO', userInfo)
           commit('SET_NAME', { name: userInfo.name, welcome: welcome() })
@@ -59,6 +66,9 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const result = response.data
+          userPermission({ role_ids: result.role_ids }).then(res => {
+            commit('SET_PERMISSION', res.data)
+          })
           commit('SET_NAME', { name: result.name, welcome: welcome() })
           commit('SET_ROLES', result.role_ids)
           resolve(response)
@@ -67,38 +77,6 @@ const user = {
         })
       })
     },
-    // 获取用户信息
-    // GetInfo ({ commit }) {
-    //   return new Promise((resolve, reject) => {
-    //     getInfo().then(response => {
-    //       const result = response.result
-
-    //       if (result.role && result.role.permissions.length > 0) {
-    //         const role = result.role
-    //         console.log(role)
-    //         role.permissions = result.role.permissions
-    //         role.permissions.map(per => {
-    //           if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-    //             const action = per.actionEntitySet.map(action => { return action.action })
-    //             per.actionList = action
-    //           }
-    //         })
-    //         role.permissionList = role.permissions.map(permission => { return permission.permissionId })
-    //         commit('SET_ROLES', result.role)
-    //         commit('SET_INFO', result)
-    //       } else {
-    //         reject(new Error('getInfo: roles must be a non-null array !'))
-    //       }
-
-    //       commit('SET_NAME', { name: result.name, welcome: welcome() })
-    //       commit('SET_AVATAR', result.avatar)
-
-    //       resolve(response)
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
 
     // 登出
     Logout ({ commit, state }) {
@@ -109,16 +87,6 @@ const user = {
         commit('SetHaseMenu', false, { root: true })
         storage.remove(ACCESS_TOKEN)
         resolve()
-        // logout(state.token).then(() => {
-        //   commit('SET_TOKEN', '')
-        //   commit('SET_ROLES', [])
-        //   storage.remove(ACCESS_TOKEN)
-        //   resolve()
-        // }).catch((err) => {
-        //   console.log('logout fail:', err)
-        //   // resolve()
-        // }).finally(() => {
-        // })
       })
     }
 

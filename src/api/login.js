@@ -10,7 +10,8 @@ const userApi = {
   SendSmsErr: '/account/sms_err',
   // get my info
   UserInfo: '/rbac/auth/userInfo',
-  UserMenu: '/rbac/auth/menu'
+  UserMenu: '/rbac/auth/menu',
+  userPermission: '/rbac/auth/permission'
 }
 
 /**
@@ -26,6 +27,10 @@ const userApi = {
  */
 export function login (parameter) {
   return http.post(userApi.Login, parameter)
+}
+
+export function userPermission (parameter) {
+  return http.get(userApi.userPermission, parameter)
 }
 
 export function getSmsCaptcha (parameter) {

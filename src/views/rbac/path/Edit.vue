@@ -1,13 +1,13 @@
 <template>
-  <page-header-wrapper :title="false" :content="$t('form.basic-form.basic.description')">
+  <page-header-wrapper :title="false" >
     <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
       <a-form @submit="handleSubmit" :form="form">
-        <a-form-item label="pathName" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+        <a-form-item label="name" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
           <a-input
             v-decorator="[
               'name',
-              {rules: [{ required: true, message:'请输入pathName'}]}]"
-            placeholder="请输入pathName" />
+              {rules: [{ required: true, message:'请输入name'}]}]"
+            placeholder="请输入name" />
         </a-form-item>
 
         <a-form-item label="apiPath" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
@@ -30,20 +30,38 @@
             <a-select-option key="DELETE" value="DELETE">DELETE</a-select-option>
           </a-select>
         </a-form-item>
+        <a-form-item label="key" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+          <a-input
+            v-decorator="[
+              'key',
+              {rules: [{ required: true, message:'请输入key'}]}]"
+            placeholder="请输入key" />
+        </a-form-item>
+        <a-form-item label="action" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+          <a-select
+            v-decorator="[
+              'action'] "
+            placeholder="api访问方式"
+            style="width: 100%"
+            :filter-option="false">
+            <a-select-option v-for="item in actions" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
+
+          </a-select>
+        </a-form-item>
         <a-form-item label="是否开放" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }" >
-          <a-radio-group v-model="pathType" v-decorator="['domain_id', { initialValue: -1 }]">
+          <a-radio-group v-decorator="['domain_id', { initialValue: -1 }]">
             <a-radio :value="-1">开放</a-radio>
             <a-radio :value="1">私有</a-radio>
           </a-radio-group>
         </a-form-item>
         <a-form-item label="path type" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }" >
-          <a-radio-group v-model="pathType" v-decorator="['path_type', { initialValue: 1 }]">
+          <a-radio-group v-decorator="['path_type', { initialValue: 1 }]">
             <a-radio :value="1">memu</a-radio>
             <a-radio :value="2">api</a-radio>
           </a-radio-group>
 
         </a-form-item>
-        <div v-if="pathType===1">
+        <div >
           <a-form-item label="path" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
             <a-input
               v-decorator="[
@@ -154,7 +172,7 @@
           <a-button htmlType="submit" type="primary">{{ $t('form.basic-form.form.submit') }}</a-button>
           <a-button style="margin-left: 8px">{{ $t('form.basic-form.form.save') }}</a-button>
         </a-form-item>
-        </a-form-item></a-form>
+      </a-form>
     </a-card>
   </page-header-wrapper>
 </template>
@@ -168,6 +186,17 @@
 	import pick from 'lodash.pick'
 	// const fields = ['name', 'path', 'path_type', 'component', 'target', 'parent_id']
 	const meta = 		{ 'title': 'title', 'icon': 'icon', 'keepAlive': 'true', 'hiddenHeaderContent': 'true', 'hideChildren': 'true', 'show': 'true' }
+	const actions = [
+		{ key: 'add', label: '新增' },
+		{ key: 'delete', label: '删除' },
+		{ key: 'edit', label: '修改' },
+		{ key: 'query', label: '查询' },
+		{ key: 'info', label: '详情' },
+		{ key: 'enable', label: '启用' },
+		{ key: 'disable', label: '禁用' },
+		{ key: 'import', label: '导入' },
+		{ key: 'export', label: '导出' }
+	]
 	export default {
 		name: 'Edit',
 		data () {
@@ -177,7 +206,7 @@
 				form: this.$form.createForm(this),
 				pk: this.$route.query.id,
 				metas: [],
-				pathType: 1
+				actions: actions
 
 			}
 		},
@@ -254,7 +283,7 @@
 			},
 			searchPath (val) {
 				this.fetching = true
-				pathList(false, {}).then(res => {
+				pathList(false, { 'path_type': 1 }).then(res => {
 					let tmpData = []
 
 					tmpData = res.data.list.map(path => {
@@ -331,11 +360,10 @@
 		watch: {
 			$route (to, from) {
 				this.pk = this.$route.query.id
-				if (this.pk) {
-					this.form.resetFields()
-					this.metas = []
-					this.getInfo()
-				}
+
+				this.form.resetFields()
+				this.metas = []
+				this.getInfo()
 			}
 
 		}

@@ -102,25 +102,29 @@
 			}
 		},
 		watch: {
-			sourceData (data) {
-				console.log(data)
-				listToTree(data, this.treeData, 0)
+			sourceData: {
+				immediate: true,
+				handler (data) {
+					listToTree(data, this.treeData, 0)
 
-				console.log(this.treeData)
+					console.log(this.treeData)
+				}
 			},
 			targetKeys (data) {
 				this.$emit('change', data)
 			},
-			initTargetKeys (data) {
-				if (data) {
+			initTargetKeys: {
+				immediate: true,
+				handler (data) {
+					console.log('aaaa', data)
 					const rightData = []
 
 					this.targetKeys = data
 					this.treeSelect =	data
 					this.sourceData.forEach((item, k) => {
+						item.disabled = false
 						if (data.indexOf(String(item.id)) >= 0) {
 							const tmp = _.clone(item)
-							tmp.disabled = false
 							rightData.push(tmp)
 							this.sourceData[k].disabled = true
 						}
@@ -130,9 +134,9 @@
 					this.rightTreeData = []
 
 					listToTree(rightData, this.rightTreeData, 0)
-					console.log(rightData)
 				}
 			}
+
 		},
 		methods: {
 			handleTransferChange (keys, direction, moveKeys) {
@@ -203,7 +207,6 @@
 					itemSelectAll(data, !checked)
 				}
 
-				console.log(checkedKeys, parent, this.targetKeys)
 				if (direction === 'left') {
 					if (parent) {
 						itemSelectAll(parent, !checked)

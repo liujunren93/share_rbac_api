@@ -8,6 +8,7 @@ import router from './router'
 import store from './store/'
 import i18n from './locales'
 import { VueAxios } from './utils/request'
+import plugin from './utils/permission'
 import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import themePluginConfig from '../config/themePluginConfig'
 
@@ -29,7 +30,7 @@ Vue.use(VueAxios)
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
-
+plugin(Vue)
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
 
 new Vue({

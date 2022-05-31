@@ -1,7 +1,8 @@
 import * as http from '@/utils/http'
 
 const api = {
-  role: '/rbac/role'
+  role: '/rbac/role',
+  rolePermission: '/rbac/rolePermission'
 }
 
 export function roleList (page, parameter) {
@@ -25,8 +26,8 @@ export function roleInfo (pk) {
 }
 
 export function rolePermission (pk) {
-  return http.get(api.role + '/' + pk)
+  return http.get(api.rolePermission + '/' + pk)
 }
-export function rolePermissionSet (pk) {
-  return http.get(api.role + '/' + pk)
+export function rolePermissionSet (pk, parameter) {
+  return http.put(api.rolePermission + '/' + pk, parameter)
 }

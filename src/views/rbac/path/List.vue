@@ -5,18 +5,23 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-input v-model="queryParam.path" placeholder="path查找"/>
-
+              <a-form-item label="path">
+                <a-input v-model="queryParam.path" placeholder="按path查找"/>
+              </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-select v-model="queryParam.path_type" placeholder="path类型查找" default-value="0">
-                <a-select-option value="1">menu</a-select-option>
-                <a-select-option value="2">api</a-select-option>
-              </a-select>
+              <a-form-item label="类型">
+                <a-select v-model="queryParam.path_type" placeholder="按path类型查找" default-value="0">
+                  <a-select-option value="1">menu</a-select-option>
+                  <a-select-option value="2">api</a-select-option>
+                </a-select>
+              </a-form-item>
             </a-col>
             <template v-if="advanced">
               <a-col :md="8" :sm="24">
-                <a-input v-model="queryParam.name" placeholder="name查找"/>
+                <a-form-item label="名称">
+                  <a-input v-model="queryParam.name" placeholder="按name查找"/>
+                </a-form-item>
               </a-col>
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
@@ -34,18 +39,8 @@
       </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleEdit(0)">新建</a-button>
+        <a-button type="primary" v-if="$shareAuth('/rbac/path.add')" icon="plus" @click="handleEdit(0)">新建</a-button>
 
-        <a-dropdown v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
       </div>
 
       <s-table
@@ -54,23 +49,28 @@
         rowKey="id"
         :columns="columns"
         :data="loadData"
-        :alert="true"
-        :rowSelection="rowSelection"
         showPagination="auto"
       >
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
 
-        <span slot="description" slot-scope="text">
-          <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
-        </span>
-
         <span slot="action" slot-scope="text, record">
           <template>
-            <a @click="handleEdit(record.id)">修改</a>
-
+            <a v-if="$shareAuth('/rbac/path.edit')" @click="handleEdit(record.id)">修改</a>
+            <a-divider type="vertical" />
           </template>
+          <a-dropdown v-if="$shareAuth('/rbac/path.delete')">
+            <a class="ant-dropdown-link">
+              更多 <a-icon type="down" />
+            </a>
+            <a-menu slot="overlay">
+
+              <a-menu-item v-if="$shareAuth('/rbac/path.delete')">
+                <a href="javascript:;">删除</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
         </span>
       </s-table>
 
@@ -156,29 +156,17 @@
 						.then(res => {
 							return res.result
 						})
-				},
-				selectedRowKeys: [],
-				selectedRows: []
+				}
+
 			}
 		},
 
 		created () {
 
 		},
-		computed: {
-			rowSelection () {
-				return {
-					selectedRowKeys: this.selectedRowKeys,
-					onChange: this.onSelectChange
-				}
-			}
-		},
+
 		methods: {
-			onSelectChange (selectedRowKeys, selectedRows) {
-				console.log(selectedRowKeys, selectedRows)
-				this.selectedRowKeys = selectedRowKeys
-				this.selectedRows = selectedRows
-			},
+
 			toggleAdvanced () {
 				this.advanced = !this.advanced
 			},

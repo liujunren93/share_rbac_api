@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="新建规则"
+    :title="model&&'角色编辑'||'新建角色'"
     :width="720"
     :body-style="{ paddingBottom: '80px' }"
     :visible="visible"
@@ -30,7 +30,7 @@
           </a-radio-group>
 
         </a-form-item>
-        <a-form-item label="状态" >
+        <a-form-item label="权限" >
           <a-transfer
             :data-source="permissionData"
             show-search
@@ -64,8 +64,8 @@
         zIndex: 1,
       }"
     >
-      <a-button style="margin-right: 8px" @click="() => { $emit('cancel') }">Cancel</a-button>
-      <a-button type="primary" @click="() => { $emit('ok') }">Submit</a-button>
+      <a-button style="margin-right: 8px" @click="() => { $emit('cancel') }">{{ $t('form.basic-form.form.cancel') }}</a-button>
+      <a-button type="primary" @click="() => { $emit('ok') }">{{ $t('form.basic-form.form.submit') }}</a-button>
     </div>
   </a-drawer>
 </template>
@@ -74,6 +74,7 @@
 	import pick from 'lodash.pick'
 	import { Transfer } from 'ant-design-vue'
 	import { permissionList } from '@/api/rbac/permission'
+	import { rolePermission } from '@/api/rbac/role'
 	// 表单字段
 	const fields = ['name', 'desc', 'id', 'status']
 
@@ -92,22 +93,33 @@
 			},
 			model: {
 				type: Object,
-				default: () => null
+				default: () => {}
 			}
+
 		},
 		data () {
 			return {
-
-				permissionData: [],
+				pk: 0,
 				targetKeys: [],
+				permissionData: [],
 				form: this.$form.createForm(this)
 			}
 		},
 		methods: {
-			getPermission () {
-
-			},
 			getRolePermission () {
+				if (this.model.id) {
+					rolePermission(this.model.id).then(res => {
+						const tmp = []
+						if (res.data) {
+							res.data.forEach(item => [
+								tmp.push(String(item.id))
+							])
+						}
+						this.targetKeys = tmp
+					})
+				}
+			},
+			getPermission () {
 				permissionList(false).then(res => {
 					res.data.list.forEach(item => {
 						this.permissionData.push({
@@ -121,17 +133,28 @@
 				this.targetKeys = keys
 			}
 		},
-
+		watch: {
+			model (val) {
+				this.targetKeys = []
+				if (!val) {
+					return
+				}
+				this.form.setFieldsValue(pick(val, fields))
+				if (val.id !== this.pk) {
+					this.getRolePermission()
+				}
+			}
+		},
 		created () {
-			console.log('custom modal created')
-			this.getRolePermission()
+			this.getPermission()
+
 			// 防止表单未注册
 			fields.forEach(v => this.form.getFieldDecorator(v))
 
 			// 当 model 发生改变时，为表单设置值
-			this.$watch('model', () => {
-				this.model && this.form.setFieldsValue(pick(this.model, fields))
-			})
+			// this.$watch('model', () => {
+			// 	this.model && this.form.setFieldsValue(pick(this.model, fields))
+			// })
 		}
 	}
 </script>

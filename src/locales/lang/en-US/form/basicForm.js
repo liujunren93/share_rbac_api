@@ -53,6 +53,7 @@ export default {
   'form.basic-form.form.optional': ' (optional) ',
   'form.basic-form.form.submit': 'Submit',
   'form.basic-form.form.save': 'Save',
+  'form.basic-form.form.cancel': 'Cancel',
   'form.basic-form.email.placeholder': 'Email',
   'form.basic-form.password.placeholder': 'Password',
   'form.basic-form.confirm-password.placeholder': 'Confirm password',

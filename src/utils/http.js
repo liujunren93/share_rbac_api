@@ -26,7 +26,10 @@ export const get = (url, params, conf = {}) => {
 export const getPage = (url, page, params, conf = {}) => {
   if (!params) {
     params = { page_size: page.pageSize, page: page.pageNo - 1 }
+  } else {
+    Object.assign(params, { page_size: page.pageSize, page: page.pageNo - 1 })
   }
+
   conf = defaultHeader(conf)
   return new Promise((resolve, reject) => {
       return request({

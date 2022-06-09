@@ -66,7 +66,13 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    if (allowList.includes(to.name)) {
+    let needLogin = true
+    if (to.meta) {
+      if (typeof to.meta.auth !== 'undefined' || to.meta.auth === false) {
+        needLogin = false
+      }
+    }
+    if (!needLogin || allowList.includes(to.name)) {
       // 在免登录名单，直接进入
       next()
     } else {

@@ -28,6 +28,14 @@
             <a-radio :value="1">启用</a-radio>
             <a-radio :value="2">禁用</a-radio>
           </a-radio-group>
+          <div v-if="!model">
+            <a-divider orientation="right">
+              Right Text
+            </a-divider>
+            <a-form-item label="domain" >
+              <a-input v-decorator="['domain', {rules: [{required: true, min: 1, message: '描述不能为空'}]}]" />
+            </a-form-item>
+          </div>
 
         </a-form-item>
 

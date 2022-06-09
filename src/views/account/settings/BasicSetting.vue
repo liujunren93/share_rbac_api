@@ -3,32 +3,44 @@
     <a-row :gutter="16" type="flex" justify="center">
       <a-col :order="isMobile ? 2 : 1" :md="24" :lg="16">
 
-        <a-form layout="vertical">
+        <a-form :form="form" layout="horizontal">
           <a-form-item
             :label="$t('account.settings.basic.nickname')"
           >
-            <a-input :placeholder="$t('account.settings.basic.nickname-message')" />
+            <a-input placeholder="请输入用户名" v-decorator="['name', {rules: [{required: true, min: 1, message: '用户名不能为空'}]}]" />
           </a-form-item>
           <a-form-item
+            :label="$t('account.settings.basic.password')"
+          >
+            <a-input-password placeholder="请输入密码" v-decorator="['password', { rules: [{pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.]).{8,}$',message:'至少8-16个字符，必须包含大写字母，小写字母，数字，符号'}]}]" />
+          </a-form-item>
+          <a-form-item
+            :label="$t('account.settings.basic.confirm_password')"
+          >
+            <a-input-password
+              placeholder="请再次输入密码"
+              v-decorator="['confirm_password', {rules: [{ validator: handleConfirmPass,trigger:'change'}]}]" />
+          </a-form-item>
+          <!-- <a-form-item
             :label="$t('account.settings.basic.profile')"
           >
             <a-textarea rows="4" :placeholder="$t('account.settings.basic.profile-message')"/>
-          </a-form-item>
+          </a-form-item> -->
 
-          <a-form-item
+          <!-- <a-form-item
             :label="$t('account.settings.basic.email')"
             :required="false"
           >
             <a-input placeholder="example@ant.design"/>
-          </a-form-item>
+          </a-form-item> -->
 
           <a-form-item>
-            <a-button type="primary">{{ $t('account.settings.basic.update') }}</a-button>
+            <a-button @click="handCommit" type="primary">保存</a-button>
           </a-form-item>
         </a-form>
 
       </a-col>
-      <a-col :order="1" :md="24" :lg="8" :style="{ minHeight: '180px' }">
+      <!-- <a-col :order="1" :md="24" :lg="8" :style="{ minHeight: '180px' }">
         <div class="ant-upload-preview" @click="$refs.modal.edit(1)" >
           <a-icon type="cloud-upload-o" class="upload-icon"/>
           <div class="mask">
@@ -40,15 +52,16 @@
 
     </a-row>
 
-    <avatar-modal ref="modal" @ok="setavatar"/>
+    <avatar-modal ref="modal" @ok="setavatar"/> -->
 
-  </div>
+    </a-row></div>
 </template>
 
 <script>
 	import AvatarModal from './AvatarModal'
 	import { baseMixin } from '@/store/app-mixin'
-
+	import { accountBaseEdit, accountBaseInfo } from '@/api/account.js'
+	import pick from 'lodash.pick'
 	export default {
 		mixins: [baseMixin],
 		components: {
@@ -58,7 +71,9 @@
 			return {
 				// cropper
 				preview: {},
+				form: this.$form.createForm(this),
 				option: {
+
 					img: '/avatar2.jpg',
 					info: true,
 					size: 1,
@@ -76,9 +91,41 @@
 			}
 		},
 		methods: {
+			getInfo () {
+				accountBaseInfo().then(res => {
+					const fields = []
+					for (const key in this.form.getFieldsValue()) {
+						fields.push(key)
+					}
+
+					this.form.setFieldsValue(pick(res.data, fields))
+				})
+			},
+			handCommit () {
+				this.form.validateFields((errors, values) => {
+					if (errors) {
+						return false
+					}
+					accountBaseEdit(values, { success: true }).then(res => {
+
+					})
+				})
+			},
+
+			handleConfirmPass (rule, value, callback) {
+				const { getFieldValue } = this.form
+				if (getFieldValue('password') !== value) {
+					callback('两次密码输入不一致！')
+				}
+
+				callback()
+			},
 			setavatar (url) {
 				this.option.img = url
 			}
+		},
+		created () {
+			this.getInfo()
 		}
 	}
 </script>

@@ -45,7 +45,7 @@
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
     </template>
     <!-- multiTab -->
-    <a-layout-content>
+    <a-layout-content v-if="!$route.meta||$route.meta.multiTab||typeof $route.meta.multiTab=== 'undefined'" >
       <multi-tab v-if="settings.multiTab"></multi-tab>
       <transition name="page-transition">
       </transition>
@@ -123,6 +123,7 @@
 		},
 		created () {
 			const routes = this.mainMenu.find(item => item.path === '/')
+
 			this.menus = (routes && routes.children) || []
 			// 处理侧栏收起状态
 			this.$watch('collapsed', () => {
@@ -168,7 +169,6 @@
 				this.collapsed = val
 			},
 			handleSettingChange ({ type, value }) {
-				console.log('type', type, value)
 				type && (this.settings[type] = value)
 				switch (type) {
 				case 'contentWidth':

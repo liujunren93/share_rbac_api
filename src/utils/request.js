@@ -21,15 +21,22 @@ const errorHandler = (error) => {
     const token = storage.get(ACCESS_TOKEN)
     const stauts = data.code
     var msg = data.msg
-    if (error.config.notification !== undefined && error.config.notification.feil) {
-      msg = error.config.notification.feil
+    let show = false
+    if (error.config.error) {
+      if (typeof error.config.error === 'boolean') {
+        show = !error.config.error
+      } else if (typeof error.config.error === 'function') {
+        error.config.error()
+        show = false
+      }
     }
-    switch (stauts) {
-        case 403:
+    if (show) {
+      switch (stauts) {
+        case 4003:
           notification['error']({ message: 'Forbidden', description: msg })
           break
         case 4001:
-          notification['error']({ message: 'Unauthorized', description: 'Authorization verification failed' })
+          notification['error']({ message: 'Unauthorized', description: '登陆信息已过期' })
           if (token) {
             store.dispatch('Logout').then(() => {
               setTimeout(() => {
@@ -38,14 +45,15 @@ const errorHandler = (error) => {
             })
           }
           break
-         case 420:
+         case 4200:
             notification['error']({ message: 'Duplication', description: msg })
             break
-         case 500:
+         default :
           notification['error']({ message: 'error', description: '未知错误' })
           break
-        default:
     }
+    }
+
     return Promise.reject(error.data)
   }
   return Promise.reject(error)
@@ -68,12 +76,13 @@ request.interceptors.response.use((response) => {
     if (response.config.method !== 'get') {
       var msg = '操作成功'
       var show = true
-      if (response.config.notification) {
-        if (response.config.notification.disable !== undefined) { // 是否显示成功提示
-          show = !response.config.notification.disable
-        }
-        msg = response.config.notification.success
+      if (typeof response.config.success === 'function') {
+        response.config.success()
+        show = false
+      } else if (response.config.success === false) {
+        show = false
       }
+
       if (show) {
         notification['success']({ message: 'success', description: msg, duration: 3.5 })
       }

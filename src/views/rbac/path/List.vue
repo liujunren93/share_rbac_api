@@ -5,13 +5,13 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="path">
-                <a-input v-model="queryParam.path" placeholder="按path查找"/>
+              <a-form-item label="">
+                <a-input v-model="queryParam.path" placeholder="path查找"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="类型">
-                <a-select v-model="queryParam.path_type" placeholder="按path类型查找" default-value="0">
+              <a-form-item label="">
+                <a-select v-model="queryParam.path_type" placeholder="类型查找" default-value="0">
                   <a-select-option value="1">menu</a-select-option>
                   <a-select-option value="2">api</a-select-option>
                 </a-select>
@@ -19,15 +19,25 @@
             </a-col>
             <template v-if="advanced">
               <a-col :md="8" :sm="24">
-                <a-form-item label="名称">
-                  <a-input v-model="queryParam.name" placeholder="按name查找"/>
+                <a-form-item label="">
+                  <a-input v-model="queryParam.name" placeholder="name查找"/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="">
+                  <a-select v-model="queryParam.status" placeholder="状态查找" default-value="0">
+                    <a-select-option value="0">全部</a-select-option>
+                    <a-select-option value="1">启用</a-select-option>
+                    <a-select-option value="2">禁用</a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
             </template>
+
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
+                <a-button style="margin-left: 8px" @click="() => { this.queryParam = {}; $refs.table.refresh(true)} ">重置</a-button>
                 <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? '收起' : '展开' }}
                   <a-icon :type="advanced ? 'up' : 'down'"/>

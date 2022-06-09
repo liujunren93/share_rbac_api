@@ -11,7 +11,7 @@
 	export default {
 		data () {
 			return {
-				data: []
+				data: [1]
 			}
 		},
 		methods: {

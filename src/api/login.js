@@ -25,8 +25,8 @@ const userApi = {
  * @param parameter
  * @returns {*}
  */
-export function login (parameter) {
-  return http.post(userApi.Login, parameter)
+export function login (parameter, config) {
+  return http.post(userApi.Login, parameter, config)
 }
 
 export function userPermission (parameter) {
@@ -45,8 +45,8 @@ export function getCurrentUserNav () {
   return http.get(userApi.UserMenu)
 }
 
-export function logout () {
-  return http.post(userApi.Login)
+export function logout (config) {
+  return http.post(userApi.Login, config)
 }
 /**
  * get user 2step code open?

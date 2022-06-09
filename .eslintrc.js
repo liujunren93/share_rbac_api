@@ -28,6 +28,7 @@ module.exports = {
         }
       }
     ],
+    "standard/no-callback-literal": 0,
     "vue/no-unused-vars": 0,
     'vue/v-slot-style': 0,
     'vue/component-definition-name-casing': 0,

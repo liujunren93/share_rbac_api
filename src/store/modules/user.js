@@ -42,7 +42,7 @@ const user = {
       userInfo.domain_id = 1
 
       return new Promise((resolve, reject) => {
-        login(userInfo).then(response => {
+        login(userInfo, { success: false }).then(response => {
           commit('SetHaseMenu', false, { root: true })
           const token = response.data.token
           const userInfo = response.data.user_info

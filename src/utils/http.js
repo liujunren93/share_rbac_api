@@ -63,7 +63,7 @@ export const del = (url, params, conf = {}) => {
 
 export const post = (url, params = {}, conf = {}) => {
     conf = defaultHeader(conf)
-    console.log(conf)
+
     return new Promise((resolve, reject) => {
         return request({
             url: url,

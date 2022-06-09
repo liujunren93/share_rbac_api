@@ -5,13 +5,13 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="角色名">
-                <a-input v-model="queryParam.name" placeholder=""/>
+              <a-form-item label="">
+                <a-input v-model="queryParam.name" placeholder="角色名查找"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="状态">
-                <a-select v-model="queryParam.status" placeholder="" default-value="0">
+              <a-form-item label="">
+                <a-select v-model="queryParam.status" placeholder="状态查找" default-value="0">
                   <a-select-option value="0">全部</a-select-option>
                   <a-select-option value="1">启用</a-select-option>
                   <a-select-option value="2">禁用</a-select-option>
@@ -22,7 +22,7 @@
             <a-col :md="8" :sm="24">
               <span class="table-page-search-submitButtons" >
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
+                <a-button style="margin-left: 8px" @click="() => { this.queryParam = {}; $refs.table.refresh(true)} ">重置</a-button>
 
               </span>
             </a-col>
@@ -48,11 +48,9 @@
           {{ index + 1 }}
         </span>
 
-        <template #expandedRowRender="{ record }">
-          <p style="margin: 0">
-            <a-tag v-for="item in expandPermissionList" :key="item">{{ item }}</a-tag>
-          </p>
-        </template>
+        <p v-if="loadexpandedRowRender" slot="expandedRowRender" slot-scope="record" style="margin: 0">
+          <a-tag v-if="expandPermissionList[record.id].length>0" v-for="item in expandPermissionList[record.id]" :key="item">{{ item }}</a-tag>
+        </p>
         <span slot="action" slot-scope="text, record">
           <template>
             <a v-if="$shareAuth('/rbac/role.edit')" @click="handleEdit(record)">修改</a>
@@ -131,6 +129,7 @@
 		data () {
 			this.columns = columns
 			return {
+				loadexpandedRowRender: false,
 				// create model
 				visible: false,
 				confirmLoading: false,
@@ -146,7 +145,7 @@
 						})
 				},
 				permissionTargets: [],
-				expandPermissionList: []
+				expandPermissionList: {}
 			}
 		},
 
@@ -163,15 +162,25 @@
 		},
 		methods: {
 			handExpand (expanded, record) {
+				console.log(record.id)
+				this.loadexpandedRowRender = false
+				this.expandPermissionList[record.id] = []
 				if (expanded) {
-					const tmp = []
 					rolePermission(record.id).then(res => {
-						res.data.forEach(item => {
-							tmp.push(item.name)
-						})
-						this.expandPermissionList = tmp
+						const tmp = []
+						if (res.data) {
+							res.data.forEach(item => {
+								tmp.push(item.name)
+							})
+						}
+
+						this.$set(this.expandPermissionList, record.id, tmp)
+						this.loadexpandedRowRender = true
+						console.log(this.expandPermissionList)
 					})
 				}
+
+				// this.expandPermissionList[record.id] = ['aaa', 'bbb']
 			},
 
 			resetSearchForm () {

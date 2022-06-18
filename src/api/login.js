@@ -2,6 +2,7 @@ import * as http from '@/utils/http'
 
 const userApi = {
   Login: '/rbac/auth/login',
+  refreshToken: '/rbac/auth/refreshToken',
   Logout: '/auth/logout',
   ForgePassword: '/auth/forge-password',
   Register: '/auth/register',
@@ -54,4 +55,8 @@ export function logout (config) {
  */
 export function get2step (parameter) {
   return http.post(userApi.Login, parameter)
+}
+
+export function refreshToken (refreshToken) {
+  return http.post(userApi.refreshToken, { 'refresh_token': refreshToken })
 }

@@ -7,14 +7,18 @@
       </div>
       <div class="user-layout-content">
         <div class="top">
-          <div class="header">
-            <a href="/">
-              <img src="~@/assets/logo.svg" class="logo" alt="logo">
-              <span class="title">Ant Design</span>
-            </a>
+          <div class="header ">
+            <div class="img-wrapper">
+              <a>
+                <img src="~@/assets/logo_noword.png" class="logo"/>
+                <span class="title">Share Life</span>
+              </a>
+            </div>
+
           </div>
           <div class="desc">
-            {{ $t('layouts.userLayout.title') }}
+            <!-- {{ $t('layouts.userLayout.title') }} -->
+            享受生活
           </div>
         </div>
 
@@ -27,7 +31,7 @@
             <a href="_self">条款</a>
           </div>
           <div class="copyright">
-            Copyright &copy; 2018 vueComponent
+            Copyright &copy; 2022 sharelife
           </div>
         </div>
       </div>
@@ -100,9 +104,14 @@
         text-align: center;
 
         .header {
-          height: 44px;
-          line-height: 44px;
+          height: 88px;
+          line-height: 66px;
+          .img-wrapper {
+              overflow:hidden;
 
+              display: inline-block;
+
+          }
           .badge {
             position: absolute;
             display: inline-block;
@@ -114,10 +123,12 @@
           }
 
           .logo {
-            height: 44px;
+            height: 66px;
             vertical-align: top;
             margin-right: 16px;
             border-style: none;
+            transform: translateX(-150%);
+          filter: drop-shadow(120px 0 #000);
           }
 
           .title {

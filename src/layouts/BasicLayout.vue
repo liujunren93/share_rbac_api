@@ -1,4 +1,5 @@
 <template>
+
   <pro-layout
     :menus="menus"
     :collapsed="collapsed"
@@ -8,23 +9,27 @@
     :handleCollapse="handleCollapse"
     :i18nRender="i18nRender"
     v-bind="settings"
+    :fixSiderbar="true"
   >
     <!-- Ads begin
       广告代码 真实项目中请移除
       production remove this Ads
     -->
-    <ads v-if="isProPreviewSite && !collapsed"/>
+    <!-- <ads v-if="isProPreviewSite && !collapsed"/> -->
     <!-- Ads end -->
 
     <!-- 1.0.0+ 版本 pro-layout 提供 API，
           我们推荐使用这种方式进行 LOGO 和 title 自定义
     -->
+
     <template v-slot:menuHeaderRender>
       <div>
-        <logo-svg />
+        <!-- <LogoSvg></LogoSvg> -->
+        <img src="~@/assets/logo_noword.png" class="logo" alt="logo">
         <h1>{{ title }}</h1>
       </div>
     </template>
+
     <!-- 1.0.0+ 版本 pro-layout 提供 API,
           增加 Header 左侧内容区自定义
     -->
@@ -54,7 +59,11 @@
     <template v-slot:footerRender>
       <global-footer />
     </template>
-    <router-view />
+    <keep-alive v-if="!$route.meta||$route.meta.multiTab||typeof $route.meta.multiTab=== 'undefined'" >
+      <router-view />
+    </keep-alive>
+    <router-view v-else/>
+
   </pro-layout>
 </template>
 
@@ -67,17 +76,13 @@
 	import defaultSettings from '@/config/defaultSettings'
 	import RightContent from '@/components/GlobalHeader/RightContent'
 	import GlobalFooter from '@/components/GlobalFooter'
-	import Ads from '@/components/Other/CarbonAds'
-	import LogoSvg from '../assets/logo.svg?inline'
 
 	export default {
 		name: 'BasicLayout',
 		components: {
 			SettingDrawer,
 			RightContent,
-			GlobalFooter,
-			LogoSvg,
-			Ads
+			GlobalFooter
 		},
 		data () {
 			return {
@@ -190,4 +195,5 @@
 
 <style lang="less">
 @import "./BasicLayout.less";
+
 </style>

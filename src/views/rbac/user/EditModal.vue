@@ -28,7 +28,7 @@
           </a-form-item>
           <a-form-item label="确认密码密码" >
             <a-input-password
-              v-decorator="['confirm_password', {rules: [{ validator: handleConfirmPass1,trigger:'change'}]}]" />
+              v-decorator="['confirm_password', {rules: [{ validator: handleConfirmPass,trigger:'change'}]}]" />
           </a-form-item>
         </div>
         <div v-else>

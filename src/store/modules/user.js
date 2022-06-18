@@ -1,11 +1,11 @@
-import storage from 'store'
-import { login, getInfo, userPermission } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import Store from '@/utils/storage'
+import { login, getInfo, userPermission, refreshToken } from '@/api/login'
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
 const user = {
   state: {
-    token: '',
+    token: { token: '', refreshToken: '' },
     name: '',
     welcome: '',
     avatar: '',
@@ -15,8 +15,9 @@ const user = {
   },
 
   mutations: {
-    SET_TOKEN: (state, token) => {
+    SET_TOKEN: (state, token, refreshToken) => {
       state.token = token
+      state.refreshToken = refreshToken
     },
     SET_NAME: (state, { name, welcome }) => {
       state.name = name
@@ -52,8 +53,8 @@ const user = {
           commit('SET_ROLES', userInfo.role_ids)
           commit('SET_INFO', userInfo)
           commit('SET_NAME', { name: userInfo.name, welcome: welcome() })
-          storage.set(ACCESS_TOKEN, token.access_token, (token.expiry - token.created) * 1000)
-          commit('SET_TOKEN', token.access_token)
+          storageToken(token)
+          commit('SET_TOKEN', token.access_token, token.refresh_token)
 
           resolve()
         }).catch(error => {
@@ -77,7 +78,28 @@ const user = {
         })
       })
     },
-
+    RefreshToken ({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        let rtoken = ''
+        if (state.token.refreshToken) {
+          rtoken = state.token.refreshToken
+        } else {
+          rtoken = Store.get(REFRESH_TOKEN)
+        }
+        if (rtoken) {
+          refreshToken(rtoken).then(res => {
+            const token = res.data.token
+            storageToken(token)
+            commit('SET_TOKEN', token.access_token, token.refresh_token)
+            resolve(res)
+          }).catch(error => {
+            reject(error)
+          })
+        } else {
+          return this.Logout()
+        }
+      })
+    },
     // 登出
     Logout ({ commit, state }) {
       return new Promise((resolve) => {
@@ -85,12 +107,18 @@ const user = {
         commit('SET_ROLES', [])
         // commit('permission/SetHaseMenu', false)
         commit('SetHaseMenu', false, { root: true })
-        storage.remove(ACCESS_TOKEN)
+        Store.remove(ACCESS_TOKEN)
+        Store.remove(ACCESS_TOKEN)
         resolve()
       })
     }
 
   }
+}
+
+function storageToken (token) {
+  Store.set(ACCESS_TOKEN, token.access_token, (token.expiry - token.created))
+  Store.set(REFRESH_TOKEN, token.refresh_token, (token.expiry - token.created) * 2)
 }
 
 export default user

@@ -118,7 +118,7 @@
 	import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 	import { mapActions } from 'vuex'
 	import { timeFix } from '@/utils/util'
-	import { getSmsCaptcha, get2step } from '@/api/login'
+	import { getSmsCaptcha } from '@/api/login'
 
 	export default {
 		components: {
@@ -144,13 +144,13 @@
 			}
 		},
 		created () {
-			get2step({ })
-				.then(res => {
-					this.requiredTwoStepCaptcha = res.result.stepCode
-				})
-				.catch(() => {
-					this.requiredTwoStepCaptcha = false
-				})
+			// get2step({ })
+			// 	.then(res => {
+			// 		this.requiredTwoStepCaptcha = res.result.stepCode
+			// 	})
+			// 	.catch(() => {
+			// 		this.requiredTwoStepCaptcha = false
+			// 	})
 			// this.requiredTwoStepCaptcha = true
 		},
 		methods: {
@@ -189,6 +189,7 @@
 						delete loginParams.username
 						loginParams[!state.loginType ? 'email' : 'username'] = values.username
 						// loginParams.password = md5(values.password)
+
 						Login(loginParams)
 							.then((res) => this.loginSuccess(res))
 							.catch(err => this.requestFailed(err))
@@ -268,13 +269,13 @@
 				}, 1000)
 				// this.isLoginError = false
 			},
-			requestFailed (err) {
+			requestFailed () {
 				this.isLoginError = true
-				this.$notification['error']({
-					message: '错误',
-					description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
-					duration: 4
-				})
+				// this.$notification['error']({
+				// 	message: '错误',
+				// 	description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
+				// 	duration: 4
+				// })
 			}
 		}
 	}

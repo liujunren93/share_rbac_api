@@ -80,12 +80,7 @@ const user = {
     },
     RefreshToken ({ commit, state }) {
       return new Promise((resolve, reject) => {
-        let rtoken = ''
-        if (state.token.refreshToken) {
-          rtoken = state.token.refreshToken
-        } else {
-          rtoken = Store.get(REFRESH_TOKEN)
-        }
+        const rtoken = Store.get(REFRESH_TOKEN)
         if (rtoken) {
           refreshToken(rtoken).then(res => {
             const token = res.data.token

@@ -2,26 +2,49 @@
   <page-header-wrapper :title="false" >
     <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
       <a-form @submit="handleSubmit" :form="form">
-        <a-form-item label="name" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+        <a-form-item label="父级" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+          <a-tree-select
+            v-decorator="[
+              'parent_id']"
+            show-search
+            style="width: 100%"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            placeholder="父级"
+            allow-clear
+            :tree-data="pathData"
+            treeNodeFilterProp="label"
+            :field-names="{
+              children: 'children',
+              label: 'lalel',
+              key: 'id',
+              value: 'id',
+            }"
+          ></a-tree-select>
+        </a-form-item>
+        <a-form-item
+          label="名称"
+          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
+          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"
+        >
           <a-input
             v-decorator="[
               'name',
-              {rules: [{ required: true, message:'请输入name'}]}]"
-            placeholder="请输入name" />
+              {rules: [{ required: true, message:'请输入名称'}]}]"
+            placeholder="请输入名称" />
         </a-form-item>
 
-        <a-form-item label="apiPath" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+        <a-form-item label="api路由" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
           <a-input
             v-decorator="[
               'api_path',
-              {rules: [{ required: true, message:'请输入apiPath'}]}]"
-            placeholder="请输入apiPath" />
+              {rules: [{ required: true, message:'请输入api路由'}]}]"
+            placeholder="请输入api路由" />
         </a-form-item>
-        <a-form-item label="method" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+        <a-form-item label="api method" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
           <a-select
             v-decorator="[
-              'method',{ initialValue:'GET'}, {rules: [{ required: true, message:'请输入method'}]}]"
-            placeholder="api访问方式"
+              'method',{ initialValue:'GET'}, {rules: [{ required: true, message:'请选择api请求方式'}]}]"
+            placeholder="请选择api请求方式"
             style="width: 100%"
             :filter-option="false">
             <a-select-option key="GET" value="GET">GET</a-select-option>
@@ -30,18 +53,18 @@
             <a-select-option key="DELETE" value="DELETE">DELETE</a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="key" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+        <a-form-item label="key" extra="不出意外的话，这里应该和'api路由'一样" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
           <a-input
             v-decorator="[
               'key',
               {rules: [{ required: true, message:'请输入key'}]}]"
             placeholder="请输入key" />
         </a-form-item>
-        <a-form-item label="action" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+        <a-form-item label="动作" extra="key+动作 组成按钮权限标识" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
           <a-select
             v-decorator="[
               'action'] "
-            placeholder="api访问方式"
+            placeholder="动作"
             style="width: 100%"
             :filter-option="false">
             <a-select-option v-for="item in actions" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
@@ -51,62 +74,45 @@
         <a-form-item label="是否开放" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }" >
           <a-radio-group v-decorator="['domain_id', { initialValue: -1 }]">
             <a-radio :value="-1">开放</a-radio>
-            <a-radio :value="1">私有</a-radio>
+            <a-radio :value="1">私有（平台运营）</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item label="path type" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }" >
+        <a-form-item label="类型" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }" >
           <a-radio-group v-decorator="['path_type', { initialValue: 1 }]">
-            <a-radio :value="1">memu</a-radio>
+            <a-radio :value="1">菜单+api</a-radio>
             <a-radio :value="2">api</a-radio>
           </a-radio-group>
 
         </a-form-item>
         <div >
-          <a-form-item label="path" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+          <a-form-item label="前端路由":labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
             <a-input
               v-decorator="[
                 'path',
-                {rules: [{ required: false, message:'请输入path'}]}]"
-              placeholder="请输入path" />
+                {rules: [{ required: false, message:'请输入前端路由'}]}]"
+              placeholder="请输入前端路由" />
           </a-form-item>
-          <a-form-item label="component" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+          <a-form-item label="前端组件" extra="如果为分组请选择RouteView（自定义组件请使用相对路径）" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
             <a-select
               v-decorator="[
                 'component',
               ]"
               mode="combobox"
               style="width: 100%"
-              placeholder="页面组件">
+              placeholder="前端组件">
               <a-select-option key="BasicLayout" value="BasicLayout">BasicLayou</a-select-option>
               <a-select-option key="BlankLayout" value="BlankLayout">BlankLayout</a-select-option>
               <a-select-option key="RouteView" value="RouteView">RouteView</a-select-option>
               <a-select-option key="PageView" value="PageView">PageView</a-select-option>
             </a-select>
           </a-form-item>
-          <a-form-item label="Redirect" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+          <a-form-item label="重定向地址" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
             <a-input rows="4" placeholder="重定向地址" v-decorator="[ 'redirect']" />
           </a-form-item>
-          <a-form-item label="父级" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
-            <a-tree-select
-              v-decorator="[
-                'parent_id']"
-              show-search
-              style="width: 100%"
-              :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-              placeholder="父级"
-              allow-clear
-              :tree-data="pathData"
-              treeNodeFilterProp="label"
-              :field-names="{
-                children: 'children',
-                label: 'lalel',
-                key: 'id',
-                value: 'id',
-              }"
-            ></a-tree-select>
+          <a-form-item label="排序" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+            <a-input-number style="width:100%" rows="4" placeholder="排序(越大越靠后)" v-decorator="['sort', { initialValue:999 }]" />
           </a-form-item>
-
-          <a-form-item label="target" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+          <a-form-item label="打开方式" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
             <a-select
               v-decorator="[
                 'target']"
@@ -117,7 +123,7 @@
               <a-select-option key="2" value="_blank">_blank</a-select-option>
             </a-select>
           </a-form-item>
-          <a-form-item label="meta" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+          <a-form-item label="其他配置" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
             <div
               v-for="(meta) in metas"
               :key="meta.key"

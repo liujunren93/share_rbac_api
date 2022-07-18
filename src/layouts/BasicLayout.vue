@@ -50,20 +50,17 @@
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
     </template>
     <!-- multiTab -->
-    <a-layout-content v-if="!$route.meta||$route.meta.multiTab||typeof $route.meta.multiTab=== 'undefined'" >
+    <a-layout-content :style="{ height: '100%', margin: '0 0 40px 0', paddingTop: settings.fixedHeader ? '64px' : '0' }" v-if="!$route.meta||$route.meta.multiTab||typeof $route.meta.multiTab=== 'undefined'" >
       <multi-tab v-if="settings.multiTab"></multi-tab>
       <transition name="page-transition">
       </transition>
     </a-layout-content>
+
     <!-- custom footer / 自定义Footer -->
     <template v-slot:footerRender>
       <global-footer />
     </template>
-    <keep-alive v-if="!$route.meta||$route.meta.multiTab||typeof $route.meta.multiTab=== 'undefined'" >
-      <router-view />
-    </keep-alive>
-    <router-view v-else/>
-
+    <router-view />
   </pro-layout>
 </template>
 
@@ -72,7 +69,7 @@
 	import { i18nRender } from '@/locales'
 	import { mapState } from 'vuex'
 	import { CONTENT_WIDTH_TYPE, SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mutation-types'
-
+	import MultiTab from '@/components/MultiTab'
 	import defaultSettings from '@/config/defaultSettings'
 	import RightContent from '@/components/GlobalHeader/RightContent'
 	import GlobalFooter from '@/components/GlobalFooter'
@@ -82,7 +79,8 @@
 		components: {
 			SettingDrawer,
 			RightContent,
-			GlobalFooter
+			GlobalFooter,
+			MultiTab
 		},
 		data () {
 			return {

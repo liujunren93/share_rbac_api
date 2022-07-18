@@ -95,23 +95,23 @@
 
 	const columns = [
 		{
-			title: 'name',
+			title: '名称',
 			dataIndex: 'name'
 		},
 		{
-			title: 'path',
+			title: '前端地址',
 			dataIndex: 'path'
 		},
 		{
-			title: 'component',
+			title: '组件',
 			dataIndex: 'component'
 		},
 		{
-			title: 'path_type',
+			title: '类型',
 			dataIndex: 'path_type',
 			customRender: t => {
 				if (t === 1) {
-					return '菜单'
+					return '菜单+api'
 				} else {
 					return 'api'
 				}
@@ -131,8 +131,12 @@
 			}
 		},
 		{
-			title: '更新时间',
-			dataIndex: 'updatedAt'
+			title: '修改时间',
+			sorter: true,
+			dataIndex: 'updated_at',
+			customRender: t => {
+				return moment(t).format('YYYY-MM-DD H:m:s')
+			}
 		},
 		{
 			title: '操作',

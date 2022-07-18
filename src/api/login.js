@@ -46,16 +46,16 @@ export function getCurrentUserNav () {
   return http.get(userApi.UserMenu)
 }
 
-export function logout (config) {
-  return http.post(userApi.Login, config)
-}
+// export function logout (config) {
+//   return http.post(userApi.Logout, config)
+// }
 /**
  * get user 2step code open?
  * @param parameter {*}
  */
-export function get2step (parameter) {
-  return http.post(userApi.Login, parameter)
-}
+// export function get2step (parameter) {
+//   return http.post(userApi.Login, parameter)
+// }
 
 export function refreshToken (refreshToken) {
   return http.post(userApi.refreshToken, { 'refresh_token': refreshToken })

@@ -24,12 +24,16 @@ export const get = (url, params, conf = {}) => {
 }
 
 export const getPage = (url, page, params, conf = {}) => {
-  if (!params) {
-    params = { page_size: page.pageSize, page: page.pageNo - 1 }
-  } else {
-    Object.assign(params, { page_size: page.pageSize, page: page.pageNo - 1 })
+  let pageParams = {}
+  if (page) {
+    pageParams = { page_size: page.pageSize, page: page.pageNo - 1 }
+    if (page.sortField) {
+      pageParams['sort_field'] = page.sortField
+      pageParams['sort_order'] = page.sortOrder === 'ascend' ? 'asc' : 'desc'
+    }
   }
 
+  Object.assign(params, pageParams)
   conf = defaultHeader(conf)
   return new Promise((resolve, reject) => {
       return request({

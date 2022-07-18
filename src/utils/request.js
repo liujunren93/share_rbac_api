@@ -31,42 +31,52 @@ const errorHandler = (error) => {
     const data = error.data
     // 从 localstorage 获取 token
     // const token = storage.get(ACCESS_TOKEN)
-    const stauts = data.code
     var msg = data.msg
-    let show = false
+    let show = true
+    const serShow = (data.code & 1) === 1
+   let resCode = 200
+    if (serShow) {
+      resCode = (data.code - 1) / 10
+    }
     if (error.config.error) {
       if (typeof error.config.error === 'boolean') {
-        show = !error.config.error
+        show = error.config.error
       } else if (typeof error.config.error === 'function') {
         error.config.error()
         show = false
       }
     }
     let msgType = ''
-      switch (stauts) {
-        case 4003:
-          msgType = 'Forbidden'
+    switch (resCode) {
+      case 14001:
+        msgType = 'Unauthorized'
+        msg = '账户或密码错误'
+        break
+      case 14005 || 14002:
           msg = '登陆信息已过期'
-          break
-        case 4001:
-          msg = '登陆信息已过期'
-          msgType = 'Unauthorized'
+          msgType = 'authorized timeout'
             store.dispatch('Logout').then(() => {
               setTimeout(() => {
                 window.location.reload()
               }, 1500)
             })
           break
-        case 4200:
-          msg = 'Duplication'
-          msgType = 'msg'
-            break
-        default:
-          msg = 'error'
-          msgType = '未知错误'
+      case 14003:
+          msgType = 'Forbidden'
+          msg = '无访问权限'
           break
-      }
-    if (show) {
+      default:
+        if ((data.code & 1) === 1) {
+          msg = data.msg
+          msgType = 'Error'
+        } else {
+          msg = '请求出现错误，请稍后再试'
+          msgType = 'Error'
+          break
+        }
+    }
+
+    if (serShow && show) {
       notification['error']({ message: msgType, description: msg })
     }
 

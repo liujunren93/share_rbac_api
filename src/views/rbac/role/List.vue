@@ -90,11 +90,11 @@
 	import EditModal from './EditModal'
 	const columns = [
 		{
-			title: 'name',
+			title: '角色名',
 			dataIndex: 'name'
 		},
 		{
-			title: 'desc',
+			title: '描述',
 			dataIndex: 'desc'
 		},
 
@@ -108,6 +108,14 @@
 				} else {
 					return '禁用'
 				}
+			}
+		},
+		{
+			title: '修改时间',
+			sorter: true,
+			dataIndex: 'updated_at',
+			customRender: t => {
+				return moment(t).format('YYYY-MM-DD H:m:s')
 			}
 		},
 

@@ -117,6 +117,14 @@
 				}
 			}
 		},
+		{
+			title: '修改时间',
+			sorter: true,
+			dataIndex: 'updated_at',
+			customRender: t => {
+				return moment(t).format('YYYY-MM-DD H:m:s')
+			}
+		},
 
 		{
 			title: '操作',

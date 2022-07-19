@@ -230,14 +230,14 @@
 						return
 					}
 					if (!values.id) {
-						permissionCreate(values).then(res => {
+						permissionCreate(values, { success: false }).then(res => {
 							permissionPathSet(res.data.pk, { 'path_ids': data })
 							this.visible = false
 							this.$refs.table.refresh()
 							this.mdl = null
 						})
 					} else {
-						permissionUpdate(values.id, values).then(res => {
+						permissionUpdate(values.id, values, { success: false }).then(res => {
 							permissionPathSet(values.id, { 'path_ids': data })
 							this.visible = false
 							this.$refs.table.refresh()

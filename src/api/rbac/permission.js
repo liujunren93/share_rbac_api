@@ -13,12 +13,12 @@ export function permissionList (page, parameter) {
   }
 }
 
-export function permissionCreate (parameter) {
-  return http.post(api.permission, parameter)
+export function permissionCreate (parameter, conf) {
+  return http.post(api.permission, parameter, conf)
 }
 
-export function permissionUpdate (pk, parameter) {
-  return http.put(api.permission + '/' + pk, parameter)
+export function permissionUpdate (pk, parameter, conf) {
+  return http.put(api.permission + '/' + pk, parameter, conf)
 }
 
 export function permissionInfo (pk) {

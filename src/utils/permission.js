@@ -20,20 +20,23 @@ export const PERMISSION_ENUM = {
         get () {
           const _this = this
           return (permissions) => {
-            const [permission, action] = permissions.split('.')
             const permissionList = _this.$store.getters.userPermission
             if (!permissionList) {
               return false
             }
-            if (!permissionList[permission]) {
+            const RePermissionsList = permissions.split('||')
+            for (let i = 0; i < RePermissionsList.length; i++) {
+              const [permission, action] = RePermissionsList[i].split('.')
+              if (!permissionList[permission]) {
+                return false
+              }
+              for (let i = 0; i < permissionList[permission].length; i++) {
+                if (permissionList[permission][i] === action) {
+                  return true
+                }
+              }
               return false
             }
-            for (let i = 0; i < permissionList[permission].length; i++) {
-              if (permissionList[permission][i] === action) {
-                return true
-              }
-            }
-            return false
           }
         }
       }

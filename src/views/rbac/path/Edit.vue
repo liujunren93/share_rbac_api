@@ -62,6 +62,7 @@
         </a-form-item>
         <a-form-item label="动作" extra="key+动作 组成按钮权限标识" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
           <a-select
+            mode="combobox"
             v-decorator="[
               'action'] "
             placeholder="动作"

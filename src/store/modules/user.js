@@ -47,7 +47,7 @@ const user = {
           commit('SetHaseMenu', false, { root: true })
           const token = response.data.token
           const userInfo = response.data.user_info
-          userPermission({ role_ids: userInfo.role_ids }).then(res => {
+          userPermission().then(res => {
             commit('SET_PERMISSION', res.data)
           })
           commit('SET_ROLES', userInfo.role_ids)
@@ -67,7 +67,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const result = response.data
-          userPermission({ role_ids: result.role_ids }).then(res => {
+          userPermission().then(res => {
             commit('SET_PERMISSION', res.data)
           })
           commit('SET_NAME', { name: result.name, welcome: welcome() })

@@ -115,7 +115,7 @@
 			sorter: true,
 			dataIndex: 'updated_at',
 			customRender: t => {
-				return moment(t).format('YYYY-MM-DD H:m:s')
+				return moment(t).format('YYYY-MM-DD HH:mm:ss')
 			}
 		},
 

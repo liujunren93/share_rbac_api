@@ -24,3 +24,7 @@ export function pathUpdate (pk, parameter) {
 export function pathInfo (pk) {
   return http.get(api.path + '/' + pk)
 }
+
+export function pathDel (pk) {
+  return http.del(api.path + '/' + pk)
+}

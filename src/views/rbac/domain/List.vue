@@ -61,9 +61,9 @@
         <span slot="action" slot-scope="text, record">
           <template>
             <a v-if="$shareAuth('/rbac/domain.edit')" @click="handleEdit(record)">修改</a>
-            <a-divider type="vertical" />
+            <!-- <a-divider type="vertical" /> -->
           </template>
-          <a-dropdown v-if="$shareAuth('/rbac/domain.delete')">
+          <!-- <a-dropdown v-if="$shareAuth('/rbac/domain.delete')">
             <a class="ant-dropdown-link">
               更多 <a-icon type="down" />
             </a>
@@ -73,7 +73,7 @@
                 <a href="javascript:;">删除</a>
               </a-menu-item>
             </a-menu>
-          </a-dropdown>
+          </a-dropdown> -->
         </span>
       </s-table>
 

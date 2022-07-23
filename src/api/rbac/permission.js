@@ -25,6 +25,10 @@ export function permissionInfo (pk) {
   return http.get(api.permission + '/' + pk)
 }
 
+export function permissionDel (pk) {
+  return http.del(api.permission + '/' + pk)
+}
+
 export function permissionPathList (pk) {
   return http.get(api.permissionPath + '/' + pk)
 }

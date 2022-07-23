@@ -25,6 +25,9 @@ export function userUpdate (pk, parameter) {
 export function userInfo (pk) {
   return http.get(api.admin + '/' + pk)
 }
+export function userDel (pk) {
+  return http.del(api.admin + '/' + pk)
+}
 
 export function userRoleList (pk) {
   return http.get(api.adminRole + '/' + pk)

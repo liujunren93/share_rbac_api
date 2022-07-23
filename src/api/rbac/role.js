@@ -24,6 +24,9 @@ export function roleUpdate (pk, parameter) {
 export function roleInfo (pk) {
   return http.get(api.role + '/' + pk)
 }
+export function roleDel (pk) {
+  return http.del(api.role + '/' + pk)
+}
 
 export function rolePermission (pk) {
   return http.get(api.rolePermission + '/' + pk)

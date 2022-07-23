@@ -69,7 +69,9 @@
             <a-menu slot="overlay">
 
               <a-menu-item v-if="$shareAuth('/rbac/permission.delete')">
-                <a href="javascript:;">删除</a>
+                <a-popconfirm title="确定删除？" ok-text="是" cancel-text="否" @confirm="handleDel(record.id)">
+                  <a href="javascript:;">删除</a>
+                </a-popconfirm>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -92,7 +94,7 @@
 <script>
 	import moment from 'moment'
 	import { STable, Ellipsis } from '@/components'
-	import { permissionList, permissionCreate, permissionUpdate, permissionPathSet } from '@/api/rbac/permission'
+	import { permissionList, permissionCreate, permissionUpdate, permissionPathSet, permissionDel } from '@/api/rbac/permission'
 	import EditModal from './EditModal'
 	import { pathList } from '@/api/rbac/path'
 	const columns = [
@@ -244,6 +246,11 @@
 							this.mdl = null
 						})
 					}
+				})
+			},
+			handleDel (id) {
+				permissionDel(id).then(res => {
+					this.$refs.table.refresh()
 				})
 			}
 

@@ -62,11 +62,11 @@
         </a-form-item>
         <a-form-item label="动作" extra="key+动作 组成按钮权限标识" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
           <a-select
-            mode="combobox"
             v-decorator="[
               'action'] "
             placeholder="动作"
             style="width: 100%"
+            mode="combobox"
             :filter-option="false">
             <a-select-option v-for="item in actions" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
 
@@ -86,7 +86,7 @@
 
         </a-form-item>
         <div >
-          <a-form-item label="前端路由":labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+          <a-form-item label="前端路由" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
             <a-input
               v-decorator="[
                 'path',
@@ -194,15 +194,14 @@
 	// const fields = ['name', 'path', 'path_type', 'component', 'target', 'parent_id']
 	const meta = 		{ 'title': 'title', 'icon': 'icon', 'keepAlive': 'true', 'hiddenHeaderContent': 'true', 'hideChildren': 'true', 'show': 'true' }
 	const actions = [
-		{ key: 'add', label: '新增' },
-		{ key: 'delete', label: '删除' },
-		{ key: 'edit', label: '修改' },
-		{ key: 'query', label: '查询' },
-		{ key: 'info', label: '详情' },
-		{ key: 'enable', label: '启用' },
-		{ key: 'disable', label: '禁用' },
-		{ key: 'import', label: '导入' },
-		{ key: 'export', label: '导出' }
+		{ key: 'add', label: '新增(add)' },
+		{ key: 'delete', label: '删除(delete)' },
+		{ key: 'edit', label: '修改(edit)' },
+		{ key: 'query', label: '查询(query)' },
+		{ key: 'info', label: '详情(info)' },
+		{ key: 'publish', label: '发布(publish)' },
+		{ key: 'import', label: '导入(import)' },
+		{ key: 'export', label: '导出(export)' }
 	]
 	export default {
 		name: 'Edit',

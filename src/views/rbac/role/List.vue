@@ -63,7 +63,9 @@
             <a-menu slot="overlay">
 
               <a-menu-item v-if="$shareAuth('/rbac/role.delete')">
-                <a href="javascript:;">删除</a>
+                <a-popconfirm title="确定删除？" ok-text="是" cancel-text="否" @confirm="handleDel(record.id)">
+                  <a href="javascript:;">删除</a>
+                </a-popconfirm>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -85,7 +87,7 @@
 <script>
 	import moment from 'moment'
 	import { STable } from '@/components'
-	import { roleList, roleCreate, roleUpdate, rolePermissionSet, rolePermission } from '@/api/rbac/role'
+	import { roleList, roleCreate, roleUpdate, rolePermissionSet, rolePermission, roleDel } from '@/api/rbac/role'
 
 	import EditModal from './EditModal'
 	const columns = [
@@ -247,6 +249,11 @@
 				} else {
 					this.$router.push({ path: '/rbac/path/edit' })
 				}
+			},
+			handleDel (id) {
+				roleDel(id).then(res => {
+					this.$refs.table.refresh()
+				})
 			}
 		}
 	}

@@ -62,7 +62,7 @@
             </a>
             <a-menu slot="overlay">
 
-              <a-menu-item v-if="$shareAuth('/rbac/role.delete')">
+              <a-menu-item v-if="$shareAuth('/rbac/role.delete')&&$shareDataAuth(record.pl)">
                 <a-popconfirm title="确定删除？" ok-text="是" cancel-text="否" @confirm="handleDel(record.id)">
                   <a href="javascript:;">删除</a>
                 </a-popconfirm>

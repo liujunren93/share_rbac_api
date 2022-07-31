@@ -166,7 +166,9 @@
           </a-form-item>
 
         </div>
-
+        <a-form-item label="上锁" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }">
+          <a-switch v-decorator="['is_lock', { valuePropName: 'checked' }]" />
+        </a-form-item>
         <a-form-item label="状态" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }" :required="false">
           <a-radio-group v-decorator="['status', { initialValue: 1 }]">
             <a-radio :value="1">启用</a-radio>
@@ -176,8 +178,8 @@
         </a-form-item>
 
         <a-form-item :wrapperCol="{ span: 24 }" style="text-align: center">
-          <a-button htmlType="submit" type="primary">{{ $t('form.basic-form.form.submit') }}</a-button>
-          <a-button style="margin-left: 8px">{{ $t('form.basic-form.form.save') }}</a-button>
+          <a-button htmlType="submit" type="primary" v-if="$shareDataAuth(pl)">{{ $t('form.basic-form.form.submit') }}</a-button>
+          <a-button style="margin-left: 8px" @click="() => { this.$router.go(-1)}">{{ $t('form.basic-form.form.cancel') }}</a-button>
         </a-form-item>
       </a-form>
     </a-card>
@@ -212,7 +214,8 @@
 				form: this.$form.createForm(this),
 				pk: this.$route.query.id,
 				metas: [],
-				actions: actions
+				actions: actions,
+				pl: ''
 
 			}
 		},
@@ -274,6 +277,8 @@
 							}
 							this.metas = metas
 						}
+						this.pl = res.data.pl
+						res.data['is_lock'] = !!res.data.pl
 						const fields = []
 						for (const key in this.form.getFieldsValue()) {
 							fields.push(key)

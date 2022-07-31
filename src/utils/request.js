@@ -85,6 +85,10 @@ const errorHandler = (error) => {
       case 14003:
           msgType = 'Forbidden'
           msg = '无访问权限'
+        break
+       case 11005:
+          msgType = 'Forbidden'
+          msg = '无数据权限'
           break
       default:
         if ((data.code & 1) === 1) {
@@ -122,6 +126,8 @@ request.interceptors.request.use(config => {
     return config
   } else { // token 过期
     const rtoken = Store.get(REFRESH_TOKEN)
+
+    console.log(rtoken)
     if (rtoken) {
         store.dispatch('RefreshToken').then(res => {
           onRrefreshed(res.data.token.access_token)

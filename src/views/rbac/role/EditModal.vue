@@ -30,6 +30,9 @@
           </a-radio-group>
 
         </a-form-item>
+        <a-form-item label="上锁" >
+          <a-switch v-decorator="['is_lock', { valuePropName: 'checked' }]" />
+        </a-form-item>
         <a-form-item label="权限" >
           <a-transfer
             :data-source="permissionData"
@@ -65,7 +68,7 @@
       }"
     >
       <a-button style="margin-right: 8px" @click="() => { $emit('cancel') }">{{ $t('form.basic-form.form.cancel') }}</a-button>
-      <a-button type="primary" @click="() => { $emit('ok') }">{{ $t('form.basic-form.form.submit') }}</a-button>
+      <a-button type="primary" @click="() => { $emit('ok') }" v-if="$shareDataAuth(pl)">{{ $t('form.basic-form.form.submit') }}</a-button>
     </div>
   </a-drawer>
 </template>
@@ -76,7 +79,7 @@
 	import { permissionList } from '@/api/rbac/permission'
 	import { rolePermission } from '@/api/rbac/role'
 	// 表单字段
-	const fields = ['name', 'desc', 'id', 'status']
+	const fields = ['name', 'desc', 'id', 'status', 'is_lock']
 
 	export default {
 		components: {
@@ -89,17 +92,18 @@
 			},
 			loading: {
 				type: Boolean,
-				default: () => false
+				default: false
 			},
 			model: {
 				type: Object,
-				default: () => {}
+				default: () => { }
 			}
 
 		},
 		data () {
 			return {
 				pk: 0,
+				pl: '',
 				targetKeys: [],
 				permissionData: [],
 				form: this.$form.createForm(this)
@@ -139,6 +143,8 @@
 				if (!val) {
 					return
 				}
+				this.pl = val.pl
+				val['is_lock'] = !!val.pl
 				this.form.setFieldsValue(pick(val, fields))
 				if (val.id !== this.pk) {
 					this.getRolePermission()

@@ -170,3 +170,7 @@ export function listToTreeNode (list, tree, parentId, node = 0) {
     }
   })
 }
+
+export function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time))
+}

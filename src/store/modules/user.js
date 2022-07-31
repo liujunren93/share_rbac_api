@@ -70,6 +70,7 @@ const user = {
           userPermission().then(res => {
             commit('SET_PERMISSION', res.data)
           })
+          commit('SET_INFO', result)
           commit('SET_NAME', { name: result.name, welcome: welcome() })
           commit('SET_ROLES', result.role_ids)
           resolve(response)
@@ -104,7 +105,7 @@ const user = {
         // commit('permission/SetHaseMenu', false)
         commit('SetHaseMenu', false, { root: true })
         Store.remove(ACCESS_TOKEN)
-        Store.remove(ACCESS_TOKEN)
+        Store.remove(REFRESH_TOKEN)
         resolve()
       })
     }

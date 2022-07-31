@@ -32,6 +32,9 @@
 
           </TransferTree>
         </a-form-item>
+        <a-form-item label="上锁" >
+          <a-switch v-decorator="['is_lock', { valuePropName: 'checked' }]" />
+        </a-form-item>
         <a-form-item label="状态" >
           <a-radio-group v-decorator="['status', { initialValue: 1 }]">
             <a-radio :value="1">启用</a-radio>
@@ -57,7 +60,7 @@
     >
 
       <a-button style="margin-right: 8px" @click="() => { $emit('cancel') }">{{ $t('form.basic-form.form.cancel') }}</a-button>
-      <a-button type="primary" @click="() => { $emit('ok') }">{{ $t('form.basic-form.form.submit') }}</a-button>
+      <a-button type="primary" @click="() => { $emit('ok') }" v-if="$shareDataAuth(pl)">{{ $t('form.basic-form.form.submit') }}</a-button>
     </div>
   </a-drawer></template>
 
@@ -66,7 +69,7 @@
 	import TransferTree from '@/components/TransferTree'
 	import { permissionPathList } from '@/api/rbac/permission'
 	// 表单字段
-	const fields = ['name', 'desc', 'id', 'status']
+	const fields = ['name', 'desc', 'id', 'status', 'is_lock']
 
 	export default {
 		components: {
@@ -99,6 +102,7 @@
 					title: 'title',
 					key: 'key'
 				},
+				pl: '',
 				form: this.$form.createForm(this)
 			}
 		},
@@ -126,6 +130,8 @@
 			fields.forEach(v => this.form.getFieldDecorator(v))
 			// 当 model 发生改变时，为表单设置值
 			this.$watch('model', () => {
+				this.pl = this.model.pl
+				this.model['is_lock'] = !!this.model.pl
 				this.model && this.form.setFieldsValue(pick(this.model, fields))
 			})
 		}

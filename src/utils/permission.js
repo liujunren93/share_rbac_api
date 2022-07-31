@@ -41,6 +41,29 @@ export const PERMISSION_ENUM = {
         }
       }
     })
+    !Vue.prototype.$shareDataAuth && Object.defineProperties(Vue.prototype, {
+      $shareDataAuth: {
+        get () {
+          const _this = this
+          return (pl) => {
+            if (!pl) {
+              return true
+            }
+            const pls = pl.split('_')
+            const level = Number(pls[0])
+            const uid = Number(pls[1])
+            const info = _this.$store.getters.userInfo
+            console.log(level, uid, info)
+            console.log('info.uid === uid ', info.uid === uid)
+            console.log('info.pl < leveld ', info.pl < level)
+            if (info.uid === uid || info.pl < level) {
+              return true
+            }
+            return false
+          }
+        }
+      }
+    })
 
     !Vue.prototype.$enum && Object.defineProperties(Vue.prototype, {
       $enum: {

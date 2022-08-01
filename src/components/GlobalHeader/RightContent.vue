@@ -6,6 +6,7 @@
 </template>
 
 <script>
+
 	import AvatarDropdown from './AvatarDropdown'
 	import SelectLang from '@/components/SelectLang'
 
@@ -48,9 +49,10 @@
 			}
 		},
 		mounted () {
+			const info = this.$store.getters.userInfo
 			setTimeout(() => {
 				this.currentUser = {
-					name: 'Serati Ma'
+					name: info.name
 				}
 			}, 1500)
 		}

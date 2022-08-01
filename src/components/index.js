@@ -24,7 +24,7 @@ import IconSelector from '@/components/IconSelector'
 import TagSelect from '@/components/TagSelect'
 import StandardFormRow from '@/components/StandardFormRow'
 import ArticleListContent from '@/components/ArticleListContent'
-
+import JsonEditor from '@/components/JsonEditor'
 import Dialog from '@/components/Dialog'
 
 export {
@@ -51,6 +51,6 @@ export {
   TagSelect,
   StandardFormRow,
   ArticleListContent,
-
+  JsonEditor,
   Dialog
 }

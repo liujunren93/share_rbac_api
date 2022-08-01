@@ -53,9 +53,6 @@ export const PERMISSION_ENUM = {
             const level = Number(pls[0])
             const uid = Number(pls[1])
             const info = _this.$store.getters.userInfo
-            console.log(level, uid, info)
-            console.log('info.uid === uid ', info.uid === uid)
-            console.log('info.pl < leveld ', info.pl < level)
             if (info.uid === uid || info.pl < level) {
               return true
             }

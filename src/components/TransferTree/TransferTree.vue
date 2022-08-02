@@ -106,8 +106,6 @@
 				immediate: true,
 				handler (data) {
 					listToTree(data, this.treeData, 0)
-
-					console.log(this.treeData)
 				}
 			},
 			targetKeys (data) {
@@ -116,7 +114,6 @@
 			initTargetKeys: {
 				immediate: true,
 				handler (data) {
-					console.log('aaaa', data)
 					const rightData = []
 
 					this.targetKeys = data
@@ -141,7 +138,6 @@
 		methods: {
 			handleTransferChange (keys, direction, moveKeys) {
 				const changeKey = []
-				console.log(this.rightTreeSelect)
 				if (direction === 'left') {
 					this.rightTreeSelect.forEach(item => {
 						if (moveKeys.indexOf(item) < 0) {
@@ -149,7 +145,6 @@
 						}
 					})
 				}
-				console.log('handleTransferChange', keys, direction, moveKeys)
 				this.sourceData.map((item, k) => {
 					if (keys.indexOf(item.key) >= 0) {
 						const tmp = _.clone(item)
@@ -179,7 +174,6 @@
 					this.treeData = []
 					this.arrayDelArray(this.treeSelect, moveKeys)
 					listToTree(this.sourceData, this.treeData, 0)
-					console.log('rightTreeData', this.rightTreeData)
 				}
 			},
 
@@ -197,8 +191,6 @@
 						break
 					}
 				}
-
-				console.log('onChecked', keys, eventKey, checked, children, direction)
 
 				if (children) {
 					const data = []

@@ -19,7 +19,7 @@
           >
             <a-input-password
               placeholder="请再次输入密码"
-              v-decorator="['confirm_password', {rules: [{ validator: handleConfirmPass,trigger:'change'}]}]" />
+              v-decorator="['confirm_password', {rules: [{ validator: handleConfirmPass,trigger:'change'}]}, { validator: this.handlePasswordLevel }]" />
           </a-form-item>
           <!-- <a-form-item
             :label="$t('account.settings.basic.profile')"
@@ -59,6 +59,7 @@
 
 <script>
 	import AvatarModal from './AvatarModal'
+	import { scorePassword } from '@/utils/util'
 	import { baseMixin } from '@/store/app-mixin'
 	import { accountBaseEdit, accountBaseInfo } from '@/api/account.js'
 	import pick from 'lodash.pick'
@@ -91,6 +92,30 @@
 			}
 		},
 		methods: {
+			handlePasswordLevel (rule, value, callback) {
+				if (value === '') {
+					return callback()
+				}
+				console.log('scorePassword ; ', scorePassword(value))
+				if (value.length >= 6) {
+					if (scorePassword(value) >= 30) {
+						this.state.level = 1
+					}
+					if (scorePassword(value) >= 60) {
+						this.state.level = 2
+					}
+					if (scorePassword(value) >= 80) {
+						this.state.level = 3
+					}
+				} else {
+					this.state.level = 0
+					callback(new Error(this.$t('user.password.strength.msg')))
+				}
+				this.state.passwordLevel = this.state.level
+				this.state.percent = this.state.level * 33
+
+				callback()
+			},
 			getInfo () {
 				accountBaseInfo().then(res => {
 					const fields = []

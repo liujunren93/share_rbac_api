@@ -59,7 +59,8 @@
 
         <span slot="action" slot-scope="text, record">
           <template>
-            <a v-if="$shareAuth('/rbac/permission.edit')" @click="handleEdit(record)">修改</a>
+            <a v-if="$shareAuth('/rbac/permission.edit')&&$shareDataAuth(record.pl)" @click="handleEdit(record)">修改</a>
+            <a v-else @click="handleEdit(record)">查看</a>
             <a-divider type="vertical" />
           </template>
           <a-dropdown v-if="$shareAuth('/rbac/permission.delete')">

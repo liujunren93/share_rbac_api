@@ -95,7 +95,6 @@
 						this.form.setFieldsValue(pick(res.data, fields))
 
 						// this.form.setFieldsValue(res.data)
-						console.log(this.form.getFieldsValue())
 					})
 				}
 			},
@@ -112,7 +111,6 @@
 						item.title += item.path
 						return item
 					})
-					console.log(this.dataSource)
 					this.fetching = false
 				})
 			},

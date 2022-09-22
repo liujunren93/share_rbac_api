@@ -73,14 +73,14 @@
           </a-select>
         </a-form-item>
         <a-form-item label="是否开放" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }" >
-          <a-radio-group v-decorator="['domain_id', { initialValue: -1 }]">
-            <a-radio :value="-1">开放</a-radio>
-            <a-radio :value="1">私有（平台运营）</a-radio>
+          <a-radio-group v-decorator="['is_public', { initialValue: false }]">
+            <a-radio :value="true">是</a-radio>
+            <a-radio :value="false">否（平台运营）</a-radio>
           </a-radio-group>
         </a-form-item>
         <a-form-item label="类型" :labelCol="{lg: {span: 7}, sm: {span: 7}}" :wrapperCol="{lg: {span: 10}, sm: {span: 17} }" >
           <a-radio-group v-decorator="['path_type', { initialValue: 1 }]">
-            <a-radio :value="1">菜单+api</a-radio>
+            <a-radio :value="1">前端路由+api</a-radio>
             <a-radio :value="2">api</a-radio>
           </a-radio-group>
 
@@ -132,18 +132,18 @@
               <a-input-group
                 size="large">
                 <a-row :gutter="1">
-                  <a-col :span="6">
-                    <a-select style="width:100%" v-model="meta.key">
-                      <a-select-option key="title" value="title">title</a-select-option>
-                      <a-select-option key="show" value="show">show</a-select-option>
-                      <a-select-option key="icon" value="icon">icon</a-select-option>
-                      <a-select-option key="keepAlive" value="keepAlive">keepAlive</a-select-option>
-                      <a-select-option key="hiddenHeaderContent" value="hiddenHeaderContent">hiddenHeaderContent</a-select-option>
-                      <a-select-option key="hideChildren" value="hideChildren">hideChildren</a-select-option>
+                  <a-col :span="8">
+                    <a-select style="width:100%" v-model="meta.key" >
+                      <a-select-option key="title" title="title" value="title">title</a-select-option>
+                      <a-select-option key="show" title="show" value="show">show</a-select-option>
+                      <a-select-option key="icon" title="icon" value="icon">icon</a-select-option>
+                      <a-select-option key="keepAlive" title="keepAlive" value="keepAlive">keepAlive</a-select-option>
+                      <a-select-option key="hiddenHeaderContent" title="hiddenHeaderContent" value="hiddenHeaderContent">hiddenHeaderContent</a-select-option>
+                      <a-select-option key="hideChildren" title="hideChildren" value="hideChildren">hideChildren</a-select-option>
 
                     </a-select>
                   </a-col>
-                  <a-col :span="16">
+                  <a-col :span="14">
                     <a-input style="width: 100%" v-model="meta.value" />
                   </a-col>
                   <a-col :span="1">
@@ -283,8 +283,10 @@
 						for (const key in this.form.getFieldsValue()) {
 							fields.push(key)
 						}
-						// console.log(fields)
-
+						res.data['is_public'] = false
+						if (res.data.domain_id === -1) {
+							res.data['is_public'] = true
+						}
 						this.form.setFieldsValue(pick(res.data, fields))
 
 						// this.form.setFieldsValue(res.data)

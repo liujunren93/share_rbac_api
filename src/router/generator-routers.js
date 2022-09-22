@@ -139,6 +139,14 @@ export const generator = (routerMap, parent) => {
  */
 const listToTree = (list, tree, parentId) => {
   list.forEach(item => {
+    if (item.meta) {
+      const meta = JSON.parse(item.meta)
+
+      if (meta.show === 'false') {
+        item.parent_id = 0
+      }
+    }
+
     // 判断是否为父级菜单
     if (item.parent_id === parentId) {
       const child = {

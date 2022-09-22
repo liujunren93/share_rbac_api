@@ -98,7 +98,6 @@ const user = {
     },
     // 登出
     Logout ({ commit, state }) {
-      console.log(11111111111111111)
       return new Promise((resolve) => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])

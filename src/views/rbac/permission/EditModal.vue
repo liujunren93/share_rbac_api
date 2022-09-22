@@ -22,6 +22,12 @@
         <a-form-item label="描述" >
           <a-input v-decorator="['desc', {rules: [{required: true, min: 1, message: '描述不能为空'}]}]" />
         </a-form-item>
+        <a-form-item label="是否开放" >
+          <a-radio-group v-decorator="['is_public', { initialValue: false }]">
+            <a-radio :value="true">是</a-radio>
+            <a-radio :value="false">否</a-radio>
+          </a-radio-group>
+        </a-form-item>
         <a-form-item label="权限" >
           <TransferTree
             :initTargetKeys="targetKeys"
@@ -132,6 +138,10 @@
 			this.$watch('model', () => {
 				this.pl = this.model.pl
 				this.model['is_lock'] = !!this.model.pl
+				this.model['is_public'] = false
+				if (this.model.domain_id === -1) {
+					this.model['is_public'] = true
+				}
 				this.model && this.form.setFieldsValue(pick(this.model, fields))
 			})
 		}

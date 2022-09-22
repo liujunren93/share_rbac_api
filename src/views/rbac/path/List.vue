@@ -67,7 +67,8 @@
 
         <span slot="action" slot-scope="text, record">
           <template>
-            <a v-if="$shareAuth('/rbac/path.edit')" @click="handleEdit(record.id)">修改</a>
+            <a v-if="$shareAuth('/rbac/path.edit')&&$shareDataAuth(record.pl)" @click="handleEdit(record.id)">修改</a>
+            <a v-else @click="handleEdit(record.id)">查看</a>
             <a-divider type="vertical" />
           </template>
           <a-dropdown v-if="$shareAuth('/rbac/path.delete')">
@@ -113,7 +114,7 @@
 			dataIndex: 'path_type',
 			customRender: t => {
 				if (t === 1) {
-					return '菜单+api'
+					return '路由+api'
 				} else {
 					return 'api'
 				}
@@ -124,6 +125,7 @@
 			title: '状态',
 			dataIndex: 'status',
 			needTotal: true,
+			sorter: true,
 			customRender: t => {
 				if (t === 1) {
 					return '启用'
@@ -133,9 +135,9 @@
 			}
 		},
 		{
-			title: '修改时间',
+			title: '创建时间',
 			sorter: true,
-			dataIndex: 'updated_at',
+			dataIndex: 'created_at',
 			customRender: t => {
 				return moment(t).format('YYYY-MM-DD HH:mm:ss')
 			}
